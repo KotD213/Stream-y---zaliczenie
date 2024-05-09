@@ -1,0 +1,81 @@
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class StreamOperations {
+
+    public static List<String> swapFirstAndLastLetter(List<String> list) {
+        return list.stream()
+                .map(s -> new StringBuilder(s).reverse().toString())
+                .collect(Collectors.toList());
+    }
+
+    public static int sumOddNumbers(List<Integer> list) {
+        return list.stream()
+                .filter(n -> n % 2 != 0)
+                .reduce(0, Integer::sum);
+    }
+
+    public static List<Person> filterPersonsByAge(List<Person> list) {
+        return list.stream()
+                .filter(p -> p.getAge() < 20)
+                .sorted(Comparator.comparing(Person::getAge))
+                .collect(Collectors.toList());
+    }
+
+    public static Person findPersonByName(List<Person> list, String name) {
+        return list.stream()
+                .filter(p -> p.getName().equals(name))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public static List<List<String>> findListsWithDuplicates(List<List<String>> list) {
+        return list.stream()
+                .filter(l -> l.stream().distinct().count() != l.size())
+                .collect(Collectors.toList());
+    }
+
+    public static boolean allStringsHaveLength(List<String> list, int length) {
+        return list.stream()
+                .allMatch(s -> s.length() == length);
+    }
+    public static class Person {
+        private String name;
+        private int age;
+    }
+}
+public class Stream {
+    List<String> swappedList = StreamOperations.swapFirstAndLastLetter(stringList);
+    List<String> stringList = List.of("Ala", "ma", "kota");
+
+        System.out.println(swappedList); // [aAl, am, atoK]
+
+    List<Integer> numberList = List.of(1, 2, 3, 4, 5);
+    int sumOfOddNumbers = StreamOperations.sumOddNumbers(numberList);
+        System.out.println(sumOfOddNumbers); // 9
+
+    List<Person> personList = List.of(
+            new Person("Jan", 25),
+            new Person("Ewa", 18),
+            new Person("Adam", 30)
+    );
+    List<Person> filteredPersons = StreamOperations.filterPersonsByAge(personList);
+        System.out.println(filteredPersons); // [Person{name='Ewa', age=18}]
+
+    String nameToFind = "Ewa";
+    Person foundPerson = StreamOperations.findPersonByName(personList, nameToFind);
+        System.out.println(foundPerson); // Person{name='Ewa', age=18}
+
+    List<List<String>> listOfLists = List.of(
+            List.of("Ala", "ma", "kota"),
+            List.of("Ala", "ma", "psa"),
+            List.of("Ala", "ma", "kota", "i", "psa")
+    );
+    List<List<String>> listsWithDuplicates = StreamOperations.findListsWithDuplicates(listOfLists);
+        System.out.println(listsWithDuplicates); // [[Ala, ma, kota, i, psa]]
+
+    List<String> stringList2 = List.of("Ala", "ma", "kota", "ma");
+    boolean allStringsHaveLength5 = StreamOperations.allStringsHaveLength(stringList2, 5);
+        System.out.println(allStringsHaveLength5); // false
+
+}
